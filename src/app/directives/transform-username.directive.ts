@@ -1,4 +1,4 @@
-import {Directive, HostBinding, HostListener} from '@angular/core';
+import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 
 const usernameTransformRegexp = /^@*(.+)?$/;
 
@@ -9,10 +9,13 @@ const getTransformedUsername = (username: String = '') =>
   selector: '[appTransformUsername]'
 })
 export class TransformUsernameDirective {
-  @HostBinding('value') value;
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {
+  }
 
   @HostListener('input', ['$event'])
-  onChange(event) {
-    this.value = getTransformedUsername(event.target.value.trim());
+  onInput(event: Event) {
+    const value = getTransformedUsername((<HTMLInputElement>event.target).value.trim().toString());
+
+    this.renderer.setProperty(this.elementRef.nativeElement, 'value', value);
   }
 }

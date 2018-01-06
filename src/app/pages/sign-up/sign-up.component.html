@@ -1,3 +1,67 @@
-<p>
-  sign-up works!
-</p>
+<div class="row">
+  <h1 class="text-center">Join us</h1>
+  <hr>
+  <div class="col-xs-12 col-md-8 col-lg-6 col-md-offset-2 col-lg-offset-3">
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input
+          appTransformUsername
+          placeholder="@username"
+          pattern="^@[^@].*$"
+          class="form-control"
+          type="text"
+          id="username"
+          name="username"
+          ngModel
+          required
+          #username="ngModel"
+        >
+        <div class="help-block" *ngIf="!username.valid && username.touched">
+          <span class="text-danger">Enter a valid username. It should starts with one @ sign.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          placeholder="email"
+          class="form-control"
+          type="text"
+          id="email"
+          name="email"
+          ngModel
+          email
+          #email="ngModel"
+        >
+        <div class="help-block" *ngIf="!email.valid && email.touched">
+          <span class="text-danger">Enter a valid email.</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          class="form-control"
+          placeholder="password"
+          type="password"
+          id="password"
+          name="password"
+          minlength="6"
+          ngModel
+          required
+          #password="ngModel"
+        >
+        <div class="help-block" *ngIf="!password.valid && password.touched">
+          <span class="text-danger">Password should contain at least 6 characters.</span>
+        </div>
+      </div>
+      <div class="text-center">
+        <input
+          type="submit"
+          class="btn btn-primary"
+          value="Login"
+          [disabled]="!formInstance.form.valid"
+        >
+      </div>
+    </form>
+  </div>
+</div>

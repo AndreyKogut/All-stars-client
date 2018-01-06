@@ -1,5 +1,5 @@
 <div class="row">
-  <h1 class="text-center">Sign in</h1>
+  <h1 class="text-center">Authorize</h1>
   <hr>
   <div class="col-xs-12 col-md-8 col-lg-6 col-md-offset-2 col-lg-offset-3">
     <form (ngSubmit)="onSubmit()" #form="ngForm">
@@ -10,7 +10,7 @@
           placeholder="@username"
           pattern="^@[^@].*$"
           class="form-control"
-          type="text"
+          type="email"
           id="username"
           name="username"
           ngModel
@@ -18,7 +18,7 @@
           #username="ngModel"
         >
         <div class="help-block" *ngIf="!username.valid && username.touched">
-          Enter a valid username. It should starts with one @ sign at the beginning.
+          <span class="text-danger">Enter a valid username. It should starts with one @ sign.</span>
         </div>
       </div>
       <div class="form-group">
@@ -35,7 +35,7 @@
           #password="ngModel"
         >
         <div class="help-block" *ngIf="!password.valid && password.touched">
-          Password should contain at least 6 characters.
+          <span class="text-danger">Password should contain at least 6 characters.</span>
         </div>
       </div>
       <div class="text-center">
