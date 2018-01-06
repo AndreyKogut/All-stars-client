@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-sign-in',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sign-in.component.less']
 })
 export class SignInComponent implements OnInit {
+  @ViewChild('form') formInstance: NgForm;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  onSubmit() {
+    this.formInstance.reset();
+  }
 }
