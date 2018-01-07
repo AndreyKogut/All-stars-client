@@ -9,14 +9,14 @@ import { AuthService } from './services/auth.service';
 import { CanActivateRegistrationService } from './services/can-activate-registration.service';
 import { CanActivateAppService } from './services/can-activate-app.service';
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
-import { RegistraionLayoutComponent } from './layouts/registraion-layout/registraion-layout.component';
+import { RegistrationLayoutComponent } from './layouts/registration-layout/registration-layout.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundComponent,
     ContentLayoutComponent,
-    RegistraionLayoutComponent,
+    RegistrationLayoutComponent,
   ],
   imports: [
     BrowserModule,

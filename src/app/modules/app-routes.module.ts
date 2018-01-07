@@ -5,12 +5,12 @@ import { NotFoundComponent } from '../pages/not-found/not-found.component';
 import { CanActivateRegistrationService } from '../services/can-activate-registration.service';
 import { CanActivateAppService } from '../services/can-activate-app.service';
 import { ContentLayoutComponent } from '../layouts/content-layout/content-layout.component';
-import { RegistraionLayoutComponent } from '../layouts/registraion-layout/registraion-layout.component';
+import { RegistrationLayoutComponent } from '../layouts/registration-layout/registration-layout.component';
 
 const appRoutes: Routes = [
   {
     path: '',
-    component: RegistraionLayoutComponent,
+    component: RegistrationLayoutComponent,
     loadChildren: './registration.module#RegistrationModule',
     canActivateChild: [CanActivateRegistrationService],
   },

@@ -14,6 +14,9 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right pointer">
+        <li *ngIf="user">
+          <a>{{ user.username }}</a>
+        </li>
         <li>
           <a (click)="handleLogout()">Logout<i class="icon-indent-left glyphicon glyphicon-log-out"></i></a>
         </li>

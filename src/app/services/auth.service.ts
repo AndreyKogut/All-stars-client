@@ -3,6 +3,7 @@ import { Http, Headers, Response, RequestOptions  } from '@angular/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 
+import { User } from '../interfaces';
 import { environment } from '../../environments/environment';
 import transformToPostDataBody from '../utils/transformToPostDataBody';
 
@@ -11,10 +12,13 @@ export class AuthService {
   private TOKEN = 'token';
   private REFRESH_TOKEN = 'refresh_token';
   errors = new Subject;
+  currentUserSub = new Subject;
+  user: User;
 
   constructor(private http: Http, private router: Router) {
     this.handleLoginErrors = this.handleLoginErrors.bind(this);
     this.handleSuccessTokensResponse = this.handleSuccessTokensResponse.bind(this);
+    this.requestErrorHandler = this.requestErrorHandler.bind(this);
   }
 
   getToken(): string {
@@ -69,6 +73,17 @@ export class AuthService {
     }
   }
 
+  requestErrorHandler(callback: Function) {
+    return (response: Response) => {
+      const { error } = response.json();
+      if (error === 'invalid_token' && !!this.getRefreshToken()) {
+        this.loginWithRefreshToken(callback);
+      } else {
+        this.router.navigate(['/sign-in']);
+      }
+    };
+  }
+
   register(requestBody: { username, password, email }) {
     this.http.post(
       `${environment.rootUrl}join`,
@@ -77,6 +92,19 @@ export class AuthService {
     ).subscribe(
       this.handleSuccessTokensResponse,
       this.handleLoginErrors,
+    );
+  }
+
+  getCurrentUser() {
+    return this.http.get(`${environment.rootUrl}users/profile`, {
+      headers: this.getAuthHeaders(),
+    }).subscribe(
+      (response: Response) => {
+        const user = response.json();
+        this.currentUserSub.next(user);
+        this.user = user;
+      },
+      this.requestErrorHandler(this.getCurrentUser.bind(this)),
     );
   }
 
@@ -91,13 +119,18 @@ export class AuthService {
     );
   }
 
-  loginWithRefreshToken() {
+  loginWithRefreshToken(callback) {
     this.http.post(
       `${environment.rootUrl}oauth/refresh_token`,
       transformToPostDataBody({ refresh_token: this.getRefreshToken() }),
       new RequestOptions({ headers: this.getRegistrationHeaders() }),
     ).subscribe(
-      this.handleSuccessTokensResponse,
+      (response: Response) => {
+        this.handleSuccessTokensResponse(response);
+        if (callback) {
+          callback();
+        }
+      },
     );
   }
 
