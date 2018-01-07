@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { NotFoundComponent } from './modules/not-found/not-found.component';
 import { AppRoutesModule } from './modules/app-routes.module';
 import { AuthService } from './services/auth.service';
-import { CanActivateRegistrationService } from './services/can-activate-registration.service';
-import { CanActivateAppService } from './services/can-activate-app.service';
+import { CanActivateRegistrationService } from './layouts/registration-layout/services/can-activate-registration.service';
+import { CanActivateAppService } from './layouts/content-layout/services/can-activate-app.service';
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
 import { RegistrationLayoutComponent } from './layouts/registration-layout/registration-layout.component';
 

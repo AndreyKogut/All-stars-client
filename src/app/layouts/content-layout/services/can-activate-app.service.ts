@@ -2,10 +2,10 @@ import { ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot }
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
-import { AuthService } from './auth.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Injectable()
-export class CanActivateRegistrationService implements CanActivateChild {
+export class CanActivateAppService implements CanActivateChild {
   constructor(private router: Router, private authService: AuthService) {}
 
   canActivateChild(
@@ -14,10 +14,10 @@ export class CanActivateRegistrationService implements CanActivateChild {
   ): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.isUserAuthorized()
       .then((isAuthorized: boolean) => {
-        if (!isAuthorized) {
+        if (isAuthorized) {
           return true;
         } else {
-          this.router.navigate(['/users']);
+          this.router.navigate(['/sign-in']);
         }
       });
   }

@@ -96,7 +96,7 @@ export class AuthService {
   }
 
   getCurrentUser() {
-    return this.http.get(`${environment.rootUrl}users/profile`, {
+    return this.http.get(`${environment.rootUrl}profile`, {
       headers: this.getAuthHeaders(),
     }).subscribe(
       (response: Response) => {
@@ -131,6 +131,10 @@ export class AuthService {
           callback();
         }
       },
+      () => {
+        this.logout();
+        this.router.navigate(['/sign-in']);
+      }
     );
   }
 

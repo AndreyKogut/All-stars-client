@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { NotFoundComponent } from '../pages/not-found/not-found.component';
-import { CanActivateRegistrationService } from '../services/can-activate-registration.service';
-import { CanActivateAppService } from '../services/can-activate-app.service';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { CanActivateRegistrationService } from '../layouts/registration-layout/services/can-activate-registration.service';
+import { CanActivateAppService } from '../layouts/content-layout/services/can-activate-app.service';
 import { ContentLayoutComponent } from '../layouts/content-layout/content-layout.component';
 import { RegistrationLayoutComponent } from '../layouts/registration-layout/registration-layout.component';
 
@@ -11,7 +11,7 @@ const appRoutes: Routes = [
   {
     path: '',
     component: RegistrationLayoutComponent,
-    loadChildren: './registration.module#RegistrationModule',
+    loadChildren: './registration/registration.module#RegistrationModule',
     canActivateChild: [CanActivateRegistrationService],
   },
   {
@@ -21,7 +21,7 @@ const appRoutes: Routes = [
       { path: '', redirectTo: '/users', pathMatch: 'full' },
       {
         path: 'users',
-        loadChildren: './users.module#UsersModule',
+        loadChildren: './users/users.module#UsersModule',
         canActivateChild: [CanActivateAppService],
       },
     ],

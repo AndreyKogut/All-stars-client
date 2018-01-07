@@ -1,0 +1,18 @@
+<div class="row" *ngIf="user">
+  <div class="col-xs-12">
+    <h3>{{ user.username }} <a routerLink="edit" class="pull-right btn btn-default btn-sm">Edit</a></h3>
+    <hr>
+  </div>
+  <div class="col-xs-12">
+    <div class="list-group">
+      <div class="list-group-item">
+        <div class="list-group-item-heading">Email:</div>
+        <div class="list-group-item-text">{{ user.email }}</div>
+      </div>
+      <div class="list-group-item">
+        <div class="list-group-item-heading">About:</div>
+        <div class="list-group-item-text">{{ user.about }}</div>
+      </div>
+    </div>
+  </div>
+</div>
