@@ -59,9 +59,10 @@
           type="submit"
           class="btn btn-primary"
           value="Login"
-          [disabled]="!formInstance.form.valid"
+          [disabled]="!formInstance.form.valid || loading"
         >
       </div>
     </form>
   </div>
+  <app-form-error [error]="error"></app-form-error>
 </div>

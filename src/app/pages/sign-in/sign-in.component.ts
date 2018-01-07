@@ -1,21 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.less']
 })
-export class SignInComponent implements OnInit {
+export class SignInComponent implements OnInit, OnDestroy {
   @ViewChild('form') formInstance: NgForm;
+  errorSubscription: Subscription;
+  loading: Boolean;
+  error = '';
 
-  constructor() {
+  constructor(public authService: AuthService) {
   }
 
   ngOnInit() {
+    this.errorSubscription = this.authService.errors.subscribe((error: string) => {
+      this.error = error;
+      this.loading = false;
+      setTimeout(() => {
+        this.error = '';
+      }, 4000);
+    });
   }
 
   onSubmit() {
-    this.formInstance.reset();
+    // this.authService.loginWithRefreshToken();
+    this.authService.login(this.formInstance.value);
+    this.loading = true;
+  }
+
+  ngOnDestroy() {
+    this.errorSubscription.unsubscribe();
   }
 }

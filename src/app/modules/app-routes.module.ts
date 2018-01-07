@@ -18,7 +18,7 @@ const appRoutes: Routes = [
     path: '',
     component: ContentLayoutComponent,
     children: [
-      { path: '', redirectTo: '/detail', pathMatch: 'full' },
+      { path: '', redirectTo: '/users', pathMatch: 'full' },
       {
         path: 'users',
         loadChildren: './users.module#UsersModule',
