@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './modules/not-found/not-found.component';
@@ -22,6 +23,7 @@ import { RegistrationLayoutComponent } from './layouts/registration-layout/regis
     BrowserModule,
     AppRoutesModule,
     HttpModule,
+    BrowserAnimationsModule,
   ],
   providers: [CanActivateRegistrationService, CanActivateAppService, AuthService],
   bootstrap: [AppComponent],
