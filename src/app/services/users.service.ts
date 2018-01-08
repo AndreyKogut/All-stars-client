@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 import { User } from '../interfaces';
 import { environment } from '../../environments/environment';
+import transformToPostDataBody from '../utils/transformToPostDataBody';
 
 @Injectable()
 export class UsersService {
@@ -23,5 +24,17 @@ export class UsersService {
       `${environment.rootUrl}users/${id}`,
       new RequestOptions({ headers: this.authService.getAuthHeaders() }),
     ).map((response: Response) => response.json());
+  }
+
+  setUserData(data: { username?: string, about?: string }) {
+    return this.http.post(
+      `${environment.rootUrl}profile`,
+      transformToPostDataBody(data),
+      new RequestOptions({ headers: this.authService.getAuthHeaders('post') })
+    ).subscribe(
+      (response: Response) => {
+        this.authService.setUserData(data);
+      }
+    );
   }
 }

@@ -1,6 +1,10 @@
 <div class="row" *ngIf="user">
   <div class="col-xs-12">
-    <h3>{{ user.username }} <a routerLink="edit" class="pull-right btn btn-default btn-sm">Edit</a></h3>
+    <h3>{{ user.username }} <a
+      routerLink="edit"
+      class="pull-right btn btn-default btn-sm"
+      *ngIf="editable"
+    >Edit</a></h3>
     <hr>
   </div>
   <div class="col-xs-12">

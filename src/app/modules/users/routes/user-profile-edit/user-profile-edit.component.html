@@ -1,3 +1,42 @@
-<p>
-  user-profile-edit works!
-</p>
+<div class="row" *ngIf="user">
+  <form class="form" #form="ngForm">
+    <div class="form-group">
+      <div>
+        <label for="username">Username:</label>
+        <app-edit-buttons-group
+          class="pull-right"
+          (onSubmit)="onSave('username')"
+          (onCancel)="onCancel('username')"
+          [isVisible]="username.value && (username.value !== user.username)"
+        ></app-edit-buttons-group>
+      </div>
+      <input
+        class="form-control"
+        appTransformUsername
+        type="text"
+        id="username"
+        [ngModel]="user.username"
+        name="username"
+        #username="ngModel"
+      >
+    </div>
+    <div class="form-group">
+      <div>
+        <label for="about">About:</label>
+        <app-edit-buttons-group
+          class="pull-right"
+          (onSubmit)="onSave('about')"
+          (onCancel)="onCancel('about')"
+          [isVisible]="about.value && (about.value !== user.about)"
+        ></app-edit-buttons-group>
+      </div>
+      <textarea
+        class="form-control resize-vertical"
+        name="about"
+        id="about"
+        [ngModel]="user.about"
+        #about="ngModel"
+      ></textarea>
+    </div>
+  </form>
+</div>

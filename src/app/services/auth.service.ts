@@ -41,9 +41,15 @@ export class AuthService {
     return Promise.resolve(!!this.getToken());
   }
 
-  getAuthHeaders() {
+  getAuthHeaders(mode?) {
     return new Headers({
       'Authorization': `Bearer ${this.getToken()}`,
+      ...(mode === 'post' ? {
+        'Content-type': 'application/x-www-form-urlencoded',
+      } : {}),
+      ...(mode === 'multipart' ? {
+        'Content-type': 'multipart/form-data',
+      } : {}),
     });
   }
 
@@ -82,6 +88,11 @@ export class AuthService {
         this.router.navigate(['/sign-in']);
       }
     };
+  }
+
+  setUserData(data: { [prop: string]: string }) {
+    this.user = { ...this.user, ...data };
+    this.currentUserSub.next(this.user);
   }
 
   register(requestBody: { username, password, email }) {

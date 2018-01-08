@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from '../../../../interfaces';
+import * as R from 'ramda';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgForm } from '@angular/forms';
+
+import { User } from '../../../../interfaces';
 import { AuthService } from '../../../../services/auth.service';
 import { UsersService } from '../../../../services/users.service';
 
@@ -10,27 +13,24 @@ import { UsersService } from '../../../../services/users.service';
   styleUrls: ['./user-profile-edit.component.less']
 })
 export class UserProfileEditComponent implements OnInit {
+  @ViewChild('form') formInstance: NgForm;
   user: User;
 
   constructor(
-    private route: ActivatedRoute,
     private authService: AuthService,
     private usersService: UsersService
-  ) {
-    this.setUser = this.setUser.bind(this);
-  }
+  ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(({ id }) => {
-      this.setUser(id);
-    });
+    this.user = this.authService.user;
+    this.authService.currentUserSub.subscribe((user: User) => this.user = user);
   }
 
-  setUser(id) {
-    this.usersService.getUser(id)
-      .subscribe(
-        (user: User) => { this.user = user; },
-        this.authService.requestErrorHandler(() => { this.setUser(id); }),
-      );
+  onSave(propName: string) {
+    this.usersService.setUserData({ [propName]: this.formInstance.value[propName].trim() });
+  }
+
+  onCancel(propName: string) {
+    this.formInstance.form.patchValue({ [propName]: this.user[propName] });
   }
 }

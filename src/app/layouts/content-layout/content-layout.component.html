@@ -10,12 +10,12 @@
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li>
+          <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
             <a routerLink="/users">Users</a>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right pointer">
-          <li *ngIf="user">
+          <li *ngIf="user" routerLinkActive="active">
             <a [routerLink]="['/users', user._id]">{{ user.username }}</a>
           </li>
           <li>

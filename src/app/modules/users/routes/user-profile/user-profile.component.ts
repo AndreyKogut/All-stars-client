@@ -31,7 +31,9 @@ export class UserProfileComponent implements OnInit {
   setUser(id) {
     this.usersService.getUser(id)
       .subscribe(
-        (user: User) => { this.user = user; this.editable = this.user._id === id; },
+        (user: User) => {
+          this.user = user; this.editable = this.authService.user._id === id;
+        },
         this.authService.requestErrorHandler(() => { this.setUser(id); }),
       );
   }
