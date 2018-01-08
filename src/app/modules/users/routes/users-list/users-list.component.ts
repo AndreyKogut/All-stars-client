@@ -15,9 +15,7 @@ export class UsersListComponent implements OnInit {
   count: number;
   skip: number;
   users: User[] = [];
-  constructor(private usersService: UsersService, private authService: AuthService) {
-    this.getUsers = this.getUsers.bind(this);
-  }
+  constructor(private usersService: UsersService, private authService: AuthService) {}
 
   ngOnInit() {
     this.getUsers({ count: STEP * 2, skip: 0 });
@@ -28,7 +26,7 @@ export class UsersListComponent implements OnInit {
       .subscribe(
         (users: User[]) => { this.users = users; this.count = count; this.skip = skip; },
         this.authService.requestErrorHandler(() => {
-          this.getUsers({ count, skip });
+          this.getUsers.call(this, { count, skip });
         })
       );
   }

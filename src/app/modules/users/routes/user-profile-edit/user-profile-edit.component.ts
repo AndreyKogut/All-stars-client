@@ -1,10 +1,15 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import * as R from 'ramda';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 import { User } from '../../../../interfaces';
 import { AuthService } from '../../../../services/auth.service';
 import { UsersService } from '../../../../services/users.service';
 import { Subscription } from 'rxjs/Subscription';
+
+const getFormInterestsArray = (interests: string[]) => new FormArray(
+  interests.map((interest: string) => new FormControl(interest)),
+);
 
 @Component({
   selector: 'app-user-profile-edit',
@@ -12,7 +17,7 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./user-profile-edit.component.less']
 })
 export class UserProfileEditComponent implements OnInit, OnDestroy {
-  @ViewChild('form') formInstance: NgForm;
+  formInstance: FormGroup;
   subs: Subscription[];
   user: User;
   error: string;
@@ -24,7 +29,11 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user = this.authService.user;
-    const userSub = this.authService.currentUserSub.subscribe((user: User) => this.user = user);
+    this.initForm(this.user);
+    const userSub = this.authService.currentUserSub.subscribe((user: User) => {
+      this.user = user;
+      this.initForm(user);
+    });
     const errorSub = this.usersService.errorsSub.subscribe((message: string) => {
       this.error = message;
       setTimeout(() => { this.error = null; }, 3000);
@@ -32,14 +41,41 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
     this.subs = [userSub, errorSub];
   }
 
+  initForm(user = { username: '', about: '', interests: [] }) {
+    this.formInstance = new FormGroup({
+      username: new FormControl(user.username),
+      about: new FormControl(user.about),
+      interests: getFormInterestsArray(user.interests),
+    });
+  }
+
+  addInterest() {
+    (<FormArray>this.formInstance.get('interests'))
+      .insert(0, new FormControl());
+  }
+
   onSave(propName: string) {
     this.error = null;
-    this.usersService.setUserData({ [propName]: this.formInstance.value[propName].trim() });
+    this.usersService.setUserData({ [propName]: this.formInstance.value[propName] });
   }
 
   onCancel(propName: string) {
     this.error = null;
-    this.formInstance.form.patchValue({ [propName]: this.user[propName] });
+
+    this.formInstance.patchValue({ [propName]: this.user[propName] });
+    if (propName === 'interests') {
+      this.formInstance.setControl(propName, getFormInterestsArray(this.user.interests));
+    }
+  }
+
+  onRemove(i) {
+    (<FormArray>this.formInstance.get('interests')).removeAt(i);
+  }
+
+  isVisible(prop) {
+    const formValue = this.formInstance.value[prop];
+
+    return formValue && !R.equals(formValue, this.user[prop]);
   }
 
   ngOnDestroy() {

@@ -17,6 +17,14 @@
         <div class="list-group-item-heading">About:</div>
         <div class="list-group-item-text">{{ user.about }}</div>
       </div>
+      <div class="list-group-item">
+        <div class="list-group-item-heading">Interests:</div>
+        <div class="list-group-item-text">
+          <span *ngFor="let interest of user.interests">
+            {{ interest }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

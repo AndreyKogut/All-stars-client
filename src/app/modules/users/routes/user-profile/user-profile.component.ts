@@ -18,9 +18,7 @@ export class UserProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private usersService: UsersService
-  ) {
-    this.setUser = this.setUser.bind(this);
-  }
+  ) {}
 
   ngOnInit() {
     this.route.params.subscribe(({ id }) => {
@@ -34,7 +32,7 @@ export class UserProfileComponent implements OnInit {
         (user: User) => {
           this.user = user; this.editable = this.authService.user._id === id;
         },
-        this.authService.requestErrorHandler(() => { this.setUser(id); }),
+        this.authService.requestErrorHandler(() => { this.setUser.call(this, id); }),
       );
   }
 }

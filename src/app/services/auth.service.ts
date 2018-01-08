@@ -79,13 +79,20 @@ export class AuthService {
     }
   }
 
-  requestErrorHandler(callback: Function) {
+  requestErrorHandler(successCallback?: Function, errorCallback?: Function) {
     return (response: Response) => {
-      const { error } = response.json();
-      if (error === 'invalid_token' && !!this.getRefreshToken()) {
-        this.loginWithRefreshToken(callback);
-      } else {
-        this.router.navigate(['/sign-in']);
+      try {
+        const { error } = response.json();
+        if (error === 'invalid_token' && !!this.getRefreshToken()) {
+          this.loginWithRefreshToken(successCallback);
+        } else {
+          if (errorCallback) {
+            errorCallback(error);
+          }
+        }
+      } catch (e) {
+        const text = response.text();
+        errorCallback(text);
       }
     };
   }
