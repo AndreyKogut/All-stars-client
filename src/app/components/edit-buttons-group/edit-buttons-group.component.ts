@@ -6,9 +6,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./edit-buttons-group.component.less']
 })
 export class EditButtonsGroupComponent {
-  @Input('isVisible') isVisible: Boolean = false;
-  @Output('onSubmit') onSubmit = new EventEmitter<any>();
-  @Output('onCancel') onCancel = new EventEmitter<any>();
+  @Input() isVisible: Boolean = false;
+  @Output() onSubmit = new EventEmitter<any>();
+  @Output() onCancel = new EventEmitter<any>();
 
   handleOnSubmit() {
     this.onSubmit.emit();

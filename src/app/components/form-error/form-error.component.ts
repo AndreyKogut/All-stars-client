@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./form-error.component.less']
 })
 export class FormErrorComponent {
-  @Input('error') error: String = '';
+  @Input() error: string;
 }

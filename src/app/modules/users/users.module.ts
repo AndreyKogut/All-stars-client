@@ -8,6 +8,7 @@ import { UsersService } from '../../services/users.service';
 import { UserProfileComponent } from './routes/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './routes/user-profile-edit/user-profile-edit.component';
 import { UsernameDirectiveShareModule } from '../../shared-modules/username-directive.share.module';
+import { ErrorToastShareModule } from '../../shared-modules/error-toast.share.module';
 import { InputButtonsShareModule } from '../../shared-modules/input-buttons.share.module';
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
     FormsModule,
     UsernameDirectiveShareModule,
     InputButtonsShareModule,
+    ErrorToastShareModule,
     RouterModule.forChild(routes),
   ],
   exports: [

@@ -2,6 +2,7 @@ import 'rxjs/add/operator/map';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 import { AuthService } from './auth.service';
 import { User } from '../interfaces';
@@ -10,6 +11,7 @@ import transformToPostDataBody from '../utils/transformToPostDataBody';
 
 @Injectable()
 export class UsersService {
+  errorsSub = new Subject;
   constructor(private authService: AuthService, private http: Http) {}
 
   getUsers({ skip, count }: { skip: number, count: number }): Observable<User[]> {
@@ -32,8 +34,12 @@ export class UsersService {
       transformToPostDataBody(data),
       new RequestOptions({ headers: this.authService.getAuthHeaders('post') })
     ).subscribe(
-      (response: Response) => {
+      () => {
         this.authService.setUserData(data);
+      },
+      (error: Response) => {
+        const message = error.text();
+        this.errorsSub.next(message);
       }
     );
   }
