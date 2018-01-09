@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { UsersListComponent } from './routes/users-list/users-list.component';
 import { UsersService } from '../../services/users.service';
@@ -11,6 +11,7 @@ import { UsernameDirectiveShareModule } from '../../shared-modules/username-dire
 import { ErrorToastShareModule } from '../../shared-modules/error-toast.share.module';
 import { InputButtonsShareModule } from '../../shared-modules/input-buttons.share.module';
 import { InterestsStrTransformPipe } from '../../pipes/interests-str-transform.pipe';
+import { InfinitScrollDirective } from '../../directives/infinit-scroll.directive';
 
 const routes: Routes = [
   {
@@ -45,6 +46,7 @@ const routes: Routes = [
     UserProfileComponent,
     UserProfileEditComponent,
     InterestsStrTransformPipe,
+    InfinitScrollDirective,
   ],
 })
 export class UsersModule { }

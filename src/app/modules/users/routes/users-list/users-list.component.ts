@@ -4,7 +4,7 @@ import { UsersService } from '../../../../services/users.service';
 import { AuthService } from '../../../../services/auth.service';
 import { User } from '../../../../interfaces';
 
-const STEP = 10;
+const STEP = 1;
 
 @Component({
   selector: 'app-users-list',
@@ -14,6 +14,7 @@ const STEP = 10;
 export class UsersListComponent implements OnInit {
   count: number;
   skip: number;
+  loading: boolean;
   users: User[] = [];
   constructor(private usersService: UsersService, private authService: AuthService) {}
 
@@ -22,13 +23,26 @@ export class UsersListComponent implements OnInit {
   }
 
   getUsers({ count, skip }: { count: number, skip: number }) {
+    this.loading = true;
     this.usersService.getUsers({ count, skip })
       .subscribe(
-        (users: User[]) => { this.users = users; this.count = count; this.skip = skip; },
+        (users: User[]) => {
+          this.users = [...this.users, ...users];
+          this.count = count;
+          this.skip = skip;
+          this.loading = false;
+        },
         this.authService.requestErrorHandler(() => {
           this.getUsers.call(this, { count, skip });
         })
       );
   }
 
+  loadMoreUsers() {
+    this.getUsers({ count: this.count, skip: this.count });
+  }
+
+  loadingAvailable() {
+    return this.users.length === this.count && !this.loading;
+  }
 }

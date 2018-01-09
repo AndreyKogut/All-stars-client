@@ -7,6 +7,6 @@ export class InterestsStrTransformPipe implements PipeTransform {
   transform([first = '', ...restItems]: string[], withCapitalizedFirstItem: boolean) {
     return `${withCapitalizedFirstItem
       ? first.charAt(0).toUpperCase()
-      : first.charAt(0)}${first.slice(1, first.length)}${restItems.length && ', '}${restItems.join(', ')}`;
+      : first.charAt(0)}${first.slice(1, first.length)}${!!restItems.length && ', '}${restItems.join(', ')}`;
   }
 }
