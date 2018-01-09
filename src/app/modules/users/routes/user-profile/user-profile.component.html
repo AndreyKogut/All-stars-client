@@ -20,9 +20,7 @@
       <div class="list-group-item">
         <div class="list-group-item-heading">Interests:</div>
         <div class="list-group-item-text">
-          <span *ngFor="let interest of user.interests">
-            {{ interest }}
-          </span>
+          {{ user.interests | transformInterests: true }}
         </div>
       </div>
     </div>

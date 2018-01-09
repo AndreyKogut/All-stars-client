@@ -10,6 +10,7 @@ import { UserProfileEditComponent } from './routes/user-profile-edit/user-profil
 import { UsernameDirectiveShareModule } from '../../shared-modules/username-directive.share.module';
 import { ErrorToastShareModule } from '../../shared-modules/error-toast.share.module';
 import { InputButtonsShareModule } from '../../shared-modules/input-buttons.share.module';
+import { InterestsStrTransformPipe } from '../../pipes/interests-str-transform.pipe';
 
 const routes: Routes = [
   {
@@ -43,6 +44,7 @@ const routes: Routes = [
     UsersListComponent,
     UserProfileComponent,
     UserProfileEditComponent,
+    InterestsStrTransformPipe,
   ],
 })
 export class UsersModule { }
