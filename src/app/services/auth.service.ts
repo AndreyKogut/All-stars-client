@@ -7,6 +7,12 @@ import { User } from '../interfaces';
 import { environment } from '../../environments/environment';
 import transformToPostDataBody from '../utils/transformToPostDataBody';
 
+const getRegistrationHeaders = () =>
+  new Headers({
+    'Authorization': `Basic ${environment.clientBasic}`,
+    'Content-type': 'application/x-www-form-urlencoded',
+});
+
 @Injectable()
 export class AuthService {
   private TOKEN = 'token';
@@ -53,13 +59,6 @@ export class AuthService {
     });
   }
 
-  getRegistrationHeaders() {
-    return new Headers({
-      'Authorization': `Basic ${environment.clientBasic}`,
-      'Content-type': 'application/x-www-form-urlencoded',
-    });
-  }
-
   handleSuccessTokensResponse(response: Response) {
     const { access_token, refresh_token} = response.json();
 
@@ -97,7 +96,7 @@ export class AuthService {
     };
   }
 
-  setUserData(data: { [prop: string]: string }) {
+  setUserData(data: { [prop: string]: any }) {
     this.user = { ...this.user, ...data };
     this.currentUserSub.next(this.user);
   }
@@ -106,7 +105,7 @@ export class AuthService {
     this.http.post(
       `${environment.rootUrl}join`,
       transformToPostDataBody(requestBody),
-      new RequestOptions({ headers: this.getRegistrationHeaders() }),
+      new RequestOptions({ headers: getRegistrationHeaders() }),
     ).subscribe(
       this.handleSuccessTokensResponse,
       this.handleLoginErrors,
@@ -130,7 +129,7 @@ export class AuthService {
     this.http.post(
       `${environment.rootUrl}oauth/token`,
       transformToPostDataBody(requestBody),
-      new RequestOptions({ headers: this.getRegistrationHeaders() }),
+      new RequestOptions({ headers: getRegistrationHeaders() }),
     ).subscribe(
       this.handleSuccessTokensResponse,
       this.handleLoginErrors,
@@ -141,7 +140,7 @@ export class AuthService {
     this.http.post(
       `${environment.rootUrl}oauth/refresh_token`,
       transformToPostDataBody({ refresh_token: this.getRefreshToken() }),
-      new RequestOptions({ headers: this.getRegistrationHeaders() }),
+      new RequestOptions({ headers: getRegistrationHeaders() }),
     ).subscribe(
       (response: Response) => {
         this.handleSuccessTokensResponse(response);

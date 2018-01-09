@@ -50,8 +50,7 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
   }
 
   addInterest() {
-    (<FormArray>this.formInstance.get('interests'))
-      .insert(0, new FormControl());
+    (<FormArray>this.formInstance.get('interests')).insert(0, new FormControl());
   }
 
   onSave(propName: string) {
@@ -68,8 +67,34 @@ export class UserProfileEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  setInterests() {
+    this.usersService.setUserInterests(this.formInstance.value.interests);
+  }
+
   onRemove(i) {
     (<FormArray>this.formInstance.get('interests')).removeAt(i);
+  }
+
+  onMove(i, control, direction) {
+    const arrayInstance = (<FormArray>this.formInstance.get('interests'));
+
+    arrayInstance.removeAt(i);
+    const arrayLength = this.formInstance.value.interests.length;
+
+    if (i + direction > arrayLength) {
+      // last -> first
+      arrayInstance.insert(0, control);
+    }
+
+    if (i + direction < 0) {
+      // first -> last
+      arrayInstance.insert(arrayLength, control);
+    }
+
+    if ((i + direction >= 0) && (i + direction <= arrayLength)) {
+      // normal move
+      arrayInstance.insert(i + direction, control);
+    }
   }
 
   isVisible(prop) {

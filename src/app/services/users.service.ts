@@ -37,10 +37,28 @@ export class UsersService {
       () => {
         this.authService.setUserData(data);
       },
-      (error: Response) => {
-        const message = error.text();
+      this.authService.requestErrorHandler(() => {
+        this.setUserData.call(this, data);
+      }, (message) => {
         this.errorsSub.next(message);
-      }
+      })
+    );
+  }
+
+  setUserInterests(interests: string[]) {
+    return this.http.put(
+      `${environment.rootUrl}interests`,
+      { interests: interests },
+      new RequestOptions({ headers: this.authService.getAuthHeaders() })
+    ).subscribe(
+      () => {
+        this.authService.setUserData({ interests });
+      },
+      this.authService.requestErrorHandler(() => {
+        this.setUserInterests.call(this, interests);
+      }, (message) => {
+        this.errorsSub.next(message);
+      })
     );
   }
 }
