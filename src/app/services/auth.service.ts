@@ -59,13 +59,15 @@ export class AuthService {
     });
   }
 
-  handleSuccessTokensResponse(response: Response) {
-    const { access_token, refresh_token} = response.json();
+  handleSuccessTokensResponse(response: Response, withRedirect: boolean = true) {
+    const { access_token, refresh_token } = response.json();
 
     this.setToken(access_token);
     this.setRefreshToken(refresh_token);
 
-    this.router.navigate(['/users']);
+    if (withRedirect) {
+      this.router.navigate(['/users']);
+    }
   }
 
   handleLoginErrors(error: Response) {
@@ -143,7 +145,7 @@ export class AuthService {
       new RequestOptions({ headers: getRegistrationHeaders() }),
     ).subscribe(
       (response: Response) => {
-        this.handleSuccessTokensResponse(response);
+        this.handleSuccessTokensResponse(response, false);
         if (callback) {
           callback();
         }
