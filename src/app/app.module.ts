@@ -28,5 +28,4 @@ import { RegistrationLayoutComponent } from './layouts/registration-layout/regis
   providers: [CanActivateRegistrationService, CanActivateAppService, AuthService],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

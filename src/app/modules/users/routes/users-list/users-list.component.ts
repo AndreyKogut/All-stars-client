@@ -4,7 +4,7 @@ import { UsersService } from '../../../../services/users.service';
 import { AuthService } from '../../../../services/auth.service';
 import { User } from '../../../../interfaces';
 
-const STEP = 1;
+const STEP = 20;
 
 @Component({
   selector: 'app-users-list',
@@ -12,37 +12,33 @@ const STEP = 1;
   styleUrls: ['./users-list.component.less']
 })
 export class UsersListComponent implements OnInit {
-  count: number;
-  skip: number;
+  skip = 0;
   loading: boolean;
   users: User[] = [];
   constructor(private usersService: UsersService, private authService: AuthService) {}
 
   ngOnInit() {
-    this.getUsers({ count: STEP * 2, skip: 0 });
+    this.getUsers();
   }
 
-  getUsers({ count, skip }: { count: number, skip: number }) {
+  getUsers() {
     this.loading = true;
-    this.usersService.getUsers({ count, skip })
+    this.usersService.getUsers({ count: STEP, skip: this.skip })
       .subscribe(
         (users: User[]) => {
           this.users = [...this.users, ...users];
-          this.count = count;
-          this.skip = skip;
+          this.skip = this.skip + STEP;
           this.loading = false;
         },
-        this.authService.requestErrorHandler(() => {
-          this.getUsers.call(this, { count, skip });
-        })
+        this.authService.requestErrorHandler(this.getUsers.bind(this))
       );
   }
 
   loadMoreUsers() {
-    this.getUsers({ count: this.count, skip: this.count });
+    this.getUsers();
   }
 
   loadingAvailable() {
-    return this.users.length === this.count && !this.loading;
+    return this.users.length === this.skip && !this.loading;
   }
 }
