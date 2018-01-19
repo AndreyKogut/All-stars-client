@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { AuthService } from '../../services/auth.service';
+import { AuthService, ChatsService } from '../../services';
 import { User } from '../../interfaces';
 
 @Component({
@@ -12,15 +12,22 @@ import { User } from '../../interfaces';
 })
 export class ContentLayoutComponent implements OnInit, OnDestroy {
   user: User;
-  userSub: Subscription;
+  subs: Subscription[];
 
-  constructor(public authService: AuthService, private router: Router) { }
+  constructor(public authService: AuthService, private chatsService: ChatsService, private router: Router) { }
 
   ngOnInit() {
     this.user = this.authService.user;
-    this.userSub = this.authService.currentUserSub.subscribe((user: User) => {
+
+    const userSub = this.authService.currentUserSub.subscribe((user: User) => {
       this.user = user;
     });
+    const chatsSub = this.chatsService.messages.subscribe((message) => {
+      console.log(message);
+    });
+
+    this.subs = [userSub, chatsSub];
+
     this.authService.getCurrentUser();
   }
 
@@ -30,6 +37,6 @@ export class ContentLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.userSub.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

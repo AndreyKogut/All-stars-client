@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './modules/not-found/not-found.component';
 import { AppRoutesModule } from './modules/app-routes.module';
-import { AuthService } from './services/auth.service';
+import { AuthService, WebsocketService, ChatsService } from './services';
 import { CanActivateRegistrationService } from './layouts/registration-layout/services/can-activate-registration.service';
 import { CanActivateAppService } from './layouts/content-layout/services/can-activate-app.service';
 import { ContentLayoutComponent } from './layouts/content-layout/content-layout.component';
@@ -25,7 +25,13 @@ import { RegistrationLayoutComponent } from './layouts/registration-layout/regis
     HttpModule,
     BrowserAnimationsModule,
   ],
-  providers: [CanActivateRegistrationService, CanActivateAppService, AuthService],
+  providers: [
+    CanActivateRegistrationService,
+    CanActivateAppService,
+    AuthService,
+    ChatsService,
+    WebsocketService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

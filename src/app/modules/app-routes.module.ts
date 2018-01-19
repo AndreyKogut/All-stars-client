@@ -17,12 +17,16 @@ const appRoutes: Routes = [
   {
     path: '',
     component: ContentLayoutComponent,
+    canActivateChild: [CanActivateAppService],
     children: [
       { path: '', redirectTo: '/users', pathMatch: 'full' },
       {
         path: 'users',
         loadChildren: './users/users.module#UsersModule',
-        canActivateChild: [CanActivateAppService],
+      },
+      {
+        path: 'chats',
+        loadChildren: './chats/chats.module#ChatsModule',
       },
     ],
   },

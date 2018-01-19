@@ -4,8 +4,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
 import { User } from '../../../../interfaces';
-import { AuthService } from '../../../../services/auth.service';
-import { UsersService } from '../../../../services/users.service';
+import { AuthService, UsersService } from '../../../../services';
 
 const getFormInterestsArray = (interests: string[]) => new FormArray(
   interests.map((interest: string) => new FormControl(interest)),

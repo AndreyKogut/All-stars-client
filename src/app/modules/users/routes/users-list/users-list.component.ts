@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UsersService } from '../../../../services/users.service';
-import { AuthService } from '../../../../services/auth.service';
+import { UsersService, AuthService } from '../../../../services';
 import { User } from '../../../../interfaces';
 
 const STEP = 20;

@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot }
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../services';
 
 @Injectable()
 export class CanActivateAppService implements CanActivateChild {
