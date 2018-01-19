@@ -27,3 +27,28 @@
     text-decoration: none;
   }
 }
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  &--child {
+    height: 100%;
+  }
+
+  &--row {
+    flex-direction: row;
+  }
+
+  &-scrollable {
+    flex: 1;
+    overflow-y: auto;
+  }
+}
+
+.scrollable {
+  overflow-y: auto;
+  height: 100%;
+}
+

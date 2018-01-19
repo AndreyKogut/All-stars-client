@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -8,7 +8,8 @@ import { User } from '../../interfaces';
 @Component({
   selector: 'app-content-layout',
   templateUrl: './content-layout.component.html',
-  styleUrls: ['./content-layout.component.less']
+  styleUrls: ['./content-layout.component.less'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ContentLayoutComponent implements OnInit, OnDestroy {
   user: User;

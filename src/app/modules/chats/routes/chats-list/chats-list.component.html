@@ -1,9 +1,21 @@
-<form (ngSubmit)="onCreateChat()" class="chats-list-header form-inline text-center clearfix" #form="ngForm">
-  <div class="form-group text-left">
-    <label for="name">Chat theme:</label>
-    <input type="text" class="form-control" [(ngModel)]="chatName" name="name" id="name">
+<div class="content-wrapper content-wrapper--child">
+  <form
+    (ngSubmit)="onCreateChat()"
+    class="form-inline text-center clearfix content-wrapper-auto"
+  >
+    <div class="form-group text-left">
+      <label for="name">Chat theme:</label>
+      <input type="text" class="form-control" [(ngModel)]="chatName" name="name" id="name">
+    </div>
+    <button class="btn btn-default">Create chat</button>
+    <hr>
+  </form>
+  <div class="chats content-wrapper content-wrapper--child content-wrapper--row">
+    <div class="scrollable">
+      <!--chats-->
+    </div>
+    <div class="scrollable content-wrapper-scrollable">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-  <button class="btn btn-default">Create chat</button>
-</form>
-<hr>
-<router-outlet></router-outlet>
+</div>
