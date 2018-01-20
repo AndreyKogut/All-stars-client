@@ -5,14 +5,43 @@
   >
     <div class="form-group text-left">
       <label for="name">Chat theme:</label>
-      <input type="text" class="form-control" [(ngModel)]="chatName" name="name" id="name">
+      <input
+        type="text"
+        class="form-control"
+        [ngModel]="getOwnChat().theme"
+        [(ngModel)]="chatName"
+        name="name"
+        id="name"
+      >
     </div>
-    <button class="btn btn-default">Create chat</button>
+    <button type="submit" class="btn btn-default">Change theme</button>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="endChat()"
+      *ngIf="getOwnChat().enabled; else enableButton"
+    >End chat</button>
+    <ng-template #enableButton>
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="startChat()"
+      >Start chat</button>
+    </ng-template>
     <hr>
   </form>
   <div class="chats content-wrapper content-wrapper--child content-wrapper--row">
     <div class="scrollable">
-      <!--chats-->
+      <div *ngFor="let chat of chats">
+        <a
+          class="chats-link"
+          [routerLink]="chat._id"
+          [ngClass]="!chat.enabled && 'text-danger'"
+          routerLinkActive="chats-link--selected"
+        >
+          {{ chat.theme }}
+        </a>
+      </div>
     </div>
     <div class="scrollable content-wrapper-scrollable">
       <router-outlet></router-outlet>

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import { User } from '../interfaces';
 import { environment } from '../../environments/environment';
 import transformToPostDataBody from '../utils/transformToPostDataBody';
+import { Observable } from 'rxjs/Observable';
 
 const getRegistrationHeaders = () =>
   new Headers({
@@ -31,7 +32,7 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN);
   }
 
-  setToken(token: string) {
+  setToken(token: string): void {
     localStorage.setItem(this.TOKEN, token);
   }
 
@@ -39,15 +40,15 @@ export class AuthService {
     return localStorage.getItem(this.REFRESH_TOKEN);
   }
 
-  setRefreshToken(token: string) {
+  setRefreshToken(token: string): void {
     localStorage.setItem(this.REFRESH_TOKEN, token);
   }
 
-  isUserAuthorized() {
+  isUserAuthorized(): Promise<boolean> {
     return Promise.resolve(!!this.getToken());
   }
 
-  getAuthHeaders(mode?) {
+  getAuthHeaders(mode?): Headers {
     return new Headers({
       'Authorization': `Bearer ${this.getToken()}`,
       ...(mode === 'post' ? {
@@ -59,7 +60,22 @@ export class AuthService {
     });
   }
 
-  handleSuccessTokensResponse(response: Response, withRedirect: boolean = true) {
+  sendRequest(method: string, url: string, body?: { [key: string]: string | string[] }): Observable<any> {
+    if (method === 'get') {
+      return this.http[method](
+        `${environment.rootUrl}${url}`,
+        new RequestOptions({ headers: this.getAuthHeaders(method) }),
+      );
+    }
+
+    return this.http[method](
+      `${environment.rootUrl}${url}`,
+      method === 'post' ? transformToPostDataBody(body) : body,
+      new RequestOptions({ headers: this.getAuthHeaders(method) }),
+    );
+  }
+
+  handleSuccessTokensResponse(response: Response, withRedirect: boolean = true): void {
     const { access_token, refresh_token } = response.json();
 
     this.setToken(access_token);
@@ -81,7 +97,7 @@ export class AuthService {
   }
 
   requestErrorHandler(successCallback?: Function, errorCallback?: Function) {
-    return (response: Response) => {
+    return (response: Response): void => {
       try {
         const { error } = response.json();
         if (error === 'invalid_token' && !!this.getRefreshToken()) {
@@ -98,12 +114,12 @@ export class AuthService {
     };
   }
 
-  setUserData(data: { [prop: string]: any }) {
+  setUserData(data: { [prop: string]: any }): void {
     this.user = { ...this.user, ...data };
     this.currentUserSub.next(this.user);
   }
 
-  register(requestBody: { username, password, email }) {
+  register(requestBody: { username, password, email }): void {
     this.http.post(
       `${environment.rootUrl}join`,
       transformToPostDataBody(requestBody),
@@ -114,10 +130,8 @@ export class AuthService {
     );
   }
 
-  getCurrentUser() {
-    return this.http.get(`${environment.rootUrl}profile`, {
-      headers: this.getAuthHeaders(),
-    }).subscribe(
+  getCurrentUser(): void {
+    this.sendRequest('get', 'profile').subscribe(
       (response: Response) => {
         const user = response.json();
         this.currentUserSub.next(user);
