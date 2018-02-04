@@ -14,7 +14,7 @@ export class UsersListComponent implements OnInit {
   skip = 0;
   loading: boolean;
   users: User[] = [];
-  constructor(private usersService: UsersService, private authService: AuthService) {}
+  constructor(private usersService: UsersService) {}
 
   ngOnInit() {
     this.getUsers();
@@ -28,8 +28,7 @@ export class UsersListComponent implements OnInit {
           this.users = [...this.users, ...users];
           this.skip = this.skip + STEP;
           this.loading = false;
-        },
-        this.authService.requestErrorHandler(this.getUsers.bind(this))
+        }
       );
   }
 

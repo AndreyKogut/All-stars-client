@@ -32,7 +32,7 @@ export class ChatsService {
 
         this.chats = { ...this.chats, [chat._id]: chat };
         this.chatsSub.next(this.getChats());
-      }, this.authService.requestErrorHandler(this.toggleChatState.bind(this, state)));
+      });
   }
 
   fetchChats() {
@@ -42,14 +42,25 @@ export class ChatsService {
         this.chats = chats.reduce((sum, chat) => ({ ...sum, [chat._id]: chat }), {});
 
         this.chatsSub.next(this.getChats());
-      }, this.authService.requestErrorHandler(this.fetchChats.bind(this)));
+      });
+  }
+
+  fetchChat(id: string) {
+    this.authService.sendRequest('get', `chats/${id}`)
+      .subscribe((response: Response) => {
+        const chat = response.json();
+        this.chats[chat._id] = chat;
+
+        this.chatsSub.next(this.getChats());
+      });
   }
 
   updateChat(id: string, theme: string) {
-    this.authService.sendRequest('post', `chat`, { theme }).subscribe(() => {
-      this.setChatData(id, { theme });
-      this.chatsSub.next(this.getChats());
-    });
+    this.authService.sendRequest('post', `chat`, { theme })
+      .subscribe(() => {
+        this.setChatData(id, { theme });
+        this.chatsSub.next(this.getChats());
+      });
   }
 
   setChatData(id: string, data: Object): void {

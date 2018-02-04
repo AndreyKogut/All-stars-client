@@ -25,7 +25,6 @@ export class AuthService {
   constructor(private http: Http, private router: Router) {
     this.handleLoginErrors = this.handleLoginErrors.bind(this);
     this.handleSuccessTokensResponse = this.handleSuccessTokensResponse.bind(this);
-    this.requestErrorHandler = this.requestErrorHandler.bind(this);
   }
 
   getToken(): string {
@@ -61,18 +60,36 @@ export class AuthService {
   }
 
   sendRequest(method: string, url: string, body?: { [key: string]: string | string[] }): Observable<any> {
-    if (method === 'get') {
-      return this.http[method](
-        `${environment.rootUrl}${url}`,
-        new RequestOptions({ headers: this.getAuthHeaders(method) }),
-      );
-    }
+    const withBody = method !== 'get'
+      ? [(method === 'post' ? transformToPostDataBody(body) : body)] : [];
 
-    return this.http[method](
+    const params = [
       `${environment.rootUrl}${url}`,
-      method === 'post' ? transformToPostDataBody(body) : body,
+      ...withBody,
       new RequestOptions({ headers: this.getAuthHeaders(method) }),
-    );
+    ];
+
+    return this.http[method](...params)
+      .catch((res: any, ob: any) => {
+        if (res.status === 401) {
+          const closedSubject = new Subject();
+
+          this.loginWithRefreshToken().subscribe(
+            (response: Response) => {
+              this.handleSuccessTokensResponse(response, false);
+              closedSubject.next();
+            },
+            () => {
+              this.logout();
+              this.router.navigate(['/sign-in']);
+            }
+          );
+
+          return ob.source.retryWhen(() => closedSubject);
+        }
+
+        return Observable.throw(res.json());
+      });
   }
 
   handleSuccessTokensResponse(response: Response, withRedirect: boolean = true): void {
@@ -82,7 +99,7 @@ export class AuthService {
     this.setRefreshToken(refresh_token);
 
     if (withRedirect) {
-      this.router.navigate(['/users']);
+      this.router.navigate(['/']);
     }
   }
 
@@ -94,24 +111,6 @@ export class AuthService {
       const errorText = error.text();
       this.errors.next(errorText);
     }
-  }
-
-  requestErrorHandler(successCallback?: Function, errorCallback?: Function) {
-    return (response: Response): void => {
-      try {
-        const { error } = response.json();
-        if (error === 'invalid_token' && !!this.getRefreshToken()) {
-          this.loginWithRefreshToken(successCallback);
-        } else {
-          if (errorCallback) {
-            errorCallback(error);
-          }
-        }
-      } catch (e) {
-        const text = response.text();
-        errorCallback(text);
-      }
-    };
   }
 
   setUserData(data: { [prop: string]: any }): void {
@@ -136,8 +135,7 @@ export class AuthService {
         const user = response.json();
         this.currentUserSub.next(user);
         this.user = user;
-      },
-      this.requestErrorHandler(this.getCurrentUser.bind(this)),
+      }
     );
   }
 
@@ -152,22 +150,11 @@ export class AuthService {
     );
   }
 
-  loginWithRefreshToken(callback) {
-    this.http.post(
+  loginWithRefreshToken(callback?) {
+    return this.http.post(
       `${environment.rootUrl}oauth/refresh_token`,
       transformToPostDataBody({ refresh_token: this.getRefreshToken() }),
       new RequestOptions({ headers: getRegistrationHeaders() }),
-    ).subscribe(
-      (response: Response) => {
-        this.handleSuccessTokensResponse(response, false);
-        if (callback) {
-          callback();
-        }
-      },
-      () => {
-        this.logout();
-        this.router.navigate(['/sign-in']);
-      }
     );
   }
 

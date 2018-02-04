@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
 import { AuthService, ChatsService } from '../../../../services';
 import { Chat, User } from '../../../../interfaces';
 
@@ -7,7 +9,8 @@ import { Chat, User } from '../../../../interfaces';
   templateUrl: './chats-list.component.html',
   styleUrls: ['./chats-list.component.less']
 })
-export class ChatsListComponent implements OnInit {
+export class ChatsListComponent implements OnInit, OnDestroy {
+  subs: Subscription[];
   chatName = this.getOwnChat().theme;
   chats: Chat[] = [];
   user: User;
@@ -19,13 +22,15 @@ export class ChatsListComponent implements OnInit {
     this.user = this.authService.user;
 
     this.chatsService.fetchChats();
-    this.chatsService.chatsSub.subscribe((chats: Chat[]) => {
+    const chatsSub = this.chatsService.chatsSub.subscribe((chats: Chat[]) => {
       this.chats = chats;
     });
 
-    this.authService.currentUserSub.subscribe((user: User) => {
+    const userSub = this.authService.currentUserSub.subscribe((user: User) => {
       this.user = user;
     });
+
+    this.subs = [chatsSub, userSub];
   }
 
   onCreateChat() {
@@ -48,5 +53,9 @@ export class ChatsListComponent implements OnInit {
 
   endChat() {
     this.chatsService.toggleChatState('off');
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach((sub: Subscription) => sub.unsubscribe());
   }
 }

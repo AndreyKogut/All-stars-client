@@ -30,8 +30,7 @@ export class UserProfileComponent implements OnInit {
       .subscribe(
         (user: User) => {
           this.user = user; this.editable = this.authService.user._id === id;
-        },
-        this.authService.requestErrorHandler(() => { this.setUser.call(this, id); }),
+        }
       );
   }
 }

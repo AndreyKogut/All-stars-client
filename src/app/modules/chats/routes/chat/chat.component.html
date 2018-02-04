@@ -1,0 +1,17 @@
+<div class="chat scrollable">
+  <div class="chat-placeholder" *ngIf="!chat; else chatTemplate">
+    <span>Loading...</span>
+  </div>
+  <ng-template #chatTemplate>
+    <div class="chat-header">
+      <h3 class="chat-name">{{ chat.theme }}</h3>
+      <span class="text-danger" *ngIf="!chat.enabled">Disabled</span>
+    </div>
+    <div class="chat-messages">
+
+    </div>
+    <div class="chat-footer">
+
+    </div>
+  </ng-template>
+</div>

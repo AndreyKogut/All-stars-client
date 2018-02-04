@@ -29,11 +29,9 @@ export class UsersService {
         () => {
           this.authService.setUserData(data);
         },
-        this.authService.requestErrorHandler(
-          this.setUserData.bind(this, data),
-          (message) => {
+        (message) => {
           this.errorsSub.next(message);
-        })
+        }
       );
   }
 
@@ -43,11 +41,9 @@ export class UsersService {
         () => {
           this.authService.setUserData({ interests });
         },
-        this.authService.requestErrorHandler(
-          this.setUserInterests.bind(this, interests),
-          (message) => {
+        (message) => {
           this.errorsSub.next(message);
-        })
+        }
       );
   }
 }
